@@ -60,9 +60,22 @@ def get_Us(vector:tuple[float,float,float]) -> tuple[float,float,float]:
 
 
 
-    vR = nR[0]*vector[0] + nR[1]*vector[1] - B*vector[2]
-    vL = nL[0]*vector[0] + nL[1]*vector[1] - B*vector[2]
-    vB = nB[0]*vector[0] + nB[1]*vector[1] - B*vector[2]
+    S = vector[2] * B    
+    det = ( nR[0] * (nL[1] - nB[1])
+        - nL[0] * (nR[1] - nB[1])
+        + nB[0] * (nR[1] - nL[1]) )
+
+    vR = ( vector[0] * (nL[1] - nB[1])
+        - nL[0]     * (vector[1] - nB[1] * S)
+        + nB[0]     * (vector[1] - nL[1] * S) ) / det
+
+    vL = ( nR[0]     * (vector[1] - nB[1] * S)
+        - vector[0] * (nR[1] - nB[1])
+        + nB[0]     * (nR[1] * S - vector[1]) ) / det
+
+    vB = ( nR[0]     * (nL[1] * S - vector[1])
+        - nL[0]     * (nR[1] * S - vector[1])
+        + vector[0] * (nR[1] - nL[1]) ) / det
 
     UR = max(-100,min(vR / r / kU,100))
     UL = max(-100,min(vL / r / kU,100))
